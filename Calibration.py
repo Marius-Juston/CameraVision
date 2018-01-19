@@ -155,26 +155,55 @@ def calibrate():
 
     newcameramtxL, roiL, newcameramtxR, roiR = right_left_new_camera_matrix
 
-    cap_left.release()
-    cap_right.release()
+    ############################################################################################
 
+    stereocalib_criteria = (cv2.TERM_CRITERIA_MAX_ITER + cv2.TERM_CRITERIA_EPS, 100, 1e-5)
+    stereocalib_flags = cv2.CALIB_FIX_ASPECT_RATIO | cv2.CALIB_ZERO_TANGENT_DIST | cv2.CALIB_SAME_FOCAL_LENGTH | cv2.CALIB_RATIONAL_MODEL | cv2.CALIB_FIX_K3 | cv2.CALIB_FIX_K4 | cv2.CALIB_FIX_K5
+    retval, newcameramtxL, distL, newcameramtxR, distR, R, T, E, F = cv2.stereoCalibrate(objL,
+                                                                                         imgL,
+                                                                                         imgR,
+                                                                                         newcameramtxL,
+                                                                                         distL,
+                                                                                         newcameramtxR,
+                                                                                         distR,
+                                                                                         (640, 480),
+                                                                                         criteria=stereocalib_criteria,
+                                                                                         flags=stereocalib_flags)
+
+    rectify_scale = 1  # 0=full crop, 1=no crop
+    R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(newcameramtxL, distL, newcameramtxR, distR,
+                                                      (640, 480), R, T, alpha=rectify_scale)
+
+    left_maps = cv2.initUndistortRectifyMap(newcameramtxL, distL, R1, P1, (640, 480), cv2.CV_16SC2)
+    right_maps = cv2.initUndistortRectifyMap(newcameramtxR, distR, R2, P2, (640, 480), cv2.CV_16SC2)
+
+    #############################################################################
+
+    global mtx_L, dist_L, newcameramtx_L, roi_L, mtx_R, dist_R, newcameramtx_R, roi_R, rectify_left_map, rectify_right_map
     mtx_L = mtxL
     dist_L = distL
-    newcameramt_L = newcameramtxL
+    newcameramtx_L = newcameramtxL
     roi_L = roiL
 
     mtx_R = mtxR
     dist_R = distR
-    newcameramt_R = newcameramtxR
+    newcameramtx_R = newcameramtxR
     roi_R = roiR
+
+    rectify_left_map = left_maps
+    rectify_right_map = right_maps
+
+    cap_left.release()
+    cap_right.release()
 
     cv2.destroyAllWindows()
 
-calibrate()
 
+rectify_left_map = None
+rectify_right_map = None
 mtx_L = None
 dist_L = None
-newcameramt_L = None
+newcameramtx_L = None
 roi_L = None
 frame_R = None
 mtx_R = None
@@ -182,12 +211,22 @@ dist_R = None
 newcameramtx_R = None
 roi_R = None
 
+calibrate()
+
 
 def undistort(frameL, frameR):
-    frameL, frameR = undistort_frames(frameL, mtx_L, dist_L, newcameramt_L, roi_L, frameR, mtx_R, dist_R,
+    frameL, frameR = undistort_frames(frameL, mtx_L, dist_L, newcameramtx_L, roi_L, frameR, mtx_R, dist_R,
                                       newcameramtx_R, roi_R)
     return frameL, frameR
 
+
+def undistory_rectify(frameL, frameR):
+    frameL, frameR = undistort(frameL, frameR)
+
+    frameL = cv2.remap(frameL, rectify_left_map[0], rectify_left_map[1], cv2.INTER_LANCZOS4)
+    frameR = cv2.remap(frameR, rectify_right_map[0], rectify_right_map[1], cv2.INTER_LANCZOS4)
+
+    return frameL, frameR
 
 # if __name__ == '__main__':
 #     calibrate()

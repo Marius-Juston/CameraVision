@@ -9,4 +9,24 @@ if __name__ == '__main__':
     cap_right = cv2.VideoCapture(1)
 
     while True:
-        pass
+        rect, frameL = cap_left.read()
+        rect, frameR = cap_right.read()
+
+        key_press = cv2.waitKey(100) & 0xFF
+
+        f1, f2 = Calibration.undistort(frameL, frameR)
+
+        cv2.imshow("L undistored", f1)
+        cv2.imshow("R undistored", f2)
+
+        frameL, frameR = Calibration.undistory_rectify(frameL, frameR)
+
+        cv2.imshow("L", frameL)
+        cv2.imshow("R", frameR)
+
+        if key_press == ord('q'):
+            break
+
+    cap_left.release()
+    cap_right.release()
+    cv2.destroyAllWindows()
