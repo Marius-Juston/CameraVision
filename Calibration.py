@@ -112,11 +112,11 @@ def undistort_frames(frameL, mtxL, distL, newcameramtxL, roiL, frameR, mtxR, dis
     dstR = cv2.remap(frameR, mapx, mapy, cv2.INTER_LINEAR)
 
     # # crop the image TODO make it so that it crops the same length
-    # x, y, w, h = roiL
-    # dstL = dstL[y:y + h, x:x + w]
-    #
-    # x, y, w, h = roiR
-    # dstR = dstR[y:y + h, x:x + w]
+    x, y, w, h = roiL
+    dstL = dstL[y:y + h, x:x + w]
+
+    x, y, w, h = roiR
+    dstR = dstR[y:y + h, x:x + w]
 
     return dstL, dstR
 
@@ -195,7 +195,7 @@ def calibrate(cap_left, cap_right, clean_previous=False):
     retval, newcameramtxL, distL, newcameramtxR, distR, R, T, E, F = stereo_calibration
     retval = retval[0]
 
-    rectify_scale = 1  # 0=full crop, 1=no crop
+    rectify_scale = 0  # 0=full crop, 1=no crop
 
     if not os.path.exists(stereo_rectification_file_name):
         stereo_rectification = cv2.stereoRectify(newcameramtxL, distL, newcameramtxR, distR,
