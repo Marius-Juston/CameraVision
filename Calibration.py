@@ -120,9 +120,7 @@ def undistort_frames(frameL, mtxL, distL, newcameramtxL, roiL, frameR, mtxR, dis
     return dstL, dstR
 
 
-def calibrate():
-    cap_left = cv2.VideoCapture(2)
-    cap_right = cv2.VideoCapture(1)
+def calibrate(cap_left, cap_right):
 
     undistorted_file_name = "right_left_undistorted.npy"
     calibrated_file_name = "right_left_calibrated.npy"
@@ -192,9 +190,6 @@ def calibrate():
 
     rectify_left_map = left_maps
     rectify_right_map = right_maps
-
-    cap_left.release()
-    cap_right.release()
 
     cv2.destroyAllWindows()
 
