@@ -206,9 +206,6 @@ dist_R = None
 newcameramtx_R = None
 roi_R = None
 
-calibrate()
-
-
 def undistort(frameL, frameR):
     frameL, frameR = undistort_frames(frameL, mtx_L, dist_L, newcameramtx_L, roi_L, frameR, mtx_R, dist_R,
                                       newcameramtx_R, roi_R)

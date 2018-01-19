@@ -16,9 +16,6 @@ if __name__ == '__main__':
 
         f1, f2 = Calibration.undistort(frameL, frameR)
 
-        cv2.imshow("L undistored", f1)
-        cv2.imshow("R undistored", f2)
-
         frameL, frameR = Calibration.undistory_rectify(frameL, frameR)
 
         cv2.imshow("L", frameL)
