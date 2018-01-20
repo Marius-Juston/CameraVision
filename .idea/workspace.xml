@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="daa05c2e-53b7-4151-abad-41e8e4001801" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/Reconstruct.py" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/Calibration.py" afterPath="$PROJECT_DIR$/Calibration.py" />
       <change beforePath="$PROJECT_DIR$/Testing.py" afterPath="$PROJECT_DIR$/Testing.py" />
+      <change beforePath="$PROJECT_DIR$/out.ply" afterPath="" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,46 +18,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="Calibration.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Calibration.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-138">
-              <caret line="115" column="28" lean-forward="false" selection-start-line="115" selection-start-column="28" selection-end-line="115" selection-end-column="28" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/requirements.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="50">
-              <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Testing.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Testing.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Testing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-550">
-              <caret line="61" column="31" lean-forward="true" selection-start-line="61" selection-start-column="31" selection-end-line="61" selection-end-column="31" />
-              <folding>
-                <element signature="e#0#10#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="300">
+              <caret line="15" column="74" lean-forward="false" selection-start-line="15" selection-start-column="74" selection-end-line="15" selection-end-column="74" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="out.ply" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/out.ply">
+      <file leaf-file-name="Reconstruct.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Reconstruct.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-150">
-              <caret line="162939" column="0" lean-forward="false" selection-start-line="162939" selection-start-column="0" selection-end-line="162939" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="425">
+              <caret line="18" column="27" lean-forward="true" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
+              <folding>
+                <element signature="e#0#30#0" expanded="true" />
+                <element signature="e#1210#1277#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -74,7 +56,16 @@
       <find>calibrate_ca</find>
       <find>getOptimalNewCameraMatrix</find>
       <find>stereoRe</find>
+      <find>StereoSGBM_create</find>
+      <find>\nclass StereoBM\(Stereo\)\:\n\n    def _to_3d\(self\, disp\, color_frame_l\)\:\n        points \= super\(\)\._to_3d\(disp\, color_frame_l\)\n        mask \= disp \&gt; disp\.min\(\)\n\n        out_points \= points\[mask\]\n        out_colors \= color_frame_l\[mask\]\n\n    def __init__\(self\, w\, h\, focal_length\)\:\n        super\(\)\.__init__\(h\, w\, focal_length\, \&quot;StereoBM disparity\&quot;\)\n\n        self\.stereo \= cv2\.StereoBM_create\(16\, 5\)  \# best between the options 0\,5 or 16\,5\n\n        cv2\.namedWindow\(super\(\)\.window_name\)\n        cv2\.createTrackbar\(\&quot;numDisparities\&quot;\, super\(\)\.window_name\, 1\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;blockSize\&quot;\, super\(\)\.window_name\, 5\, 255\, self\.__change\)\n        cv2\.setTrackbarMin\(\&quot;blockSize\&quot;\, super\(\)\.window_name\, 5\)\n\n    def __change\(self\, x\)\:\n        print\(x\)\n\n        block_size \= cv2\.getTrackbarPos\(\&quot;blockSize\&quot;\, super\(\)\.window_name\)\n        if block_size \% 2 \=\= 0\:\n            block_size \+\= 1\n            cv2\.setTrackbarPos\(\&quot;blockSize\&quot;\, super\(\)\.window_name\, block_size\)\n\n        num_disparities \= cv2\.getTrackbarPos\(\&quot;numDisparities\&quot;\, super\(\)\.window_name\) \* 16\n\n        self\.stereo \= cv2\.StereoBM_create\(num_disparities\, block_size\)\n\n    def compute\(self\, frame_l\, frame_r\)\:\n        frame_l \= cv2\.cvtColor\(frame_l\, cv2\.COLOR_BGR2GRAY\)\n        frame_r \= cv2\.cvtColor\(frame_r\, cv2\.COLOR_BGR2GRAY\)\n\n        disp \= self\.stereo\.compute\(frame_l\, frame_r\)\n\n        norm_coeff \= 255 \/ disp\.max\(\)\n        cv2\.imshow\(super\(\)\.window_name\, disp \* norm_coeff \/ 255\)\n\n        return disp\n\n\nclass StereoSGBM\(Stereo\)\:\n    def compute\(self\, frame_l\, frame_r\)\:\n        disp \= self\.stereo\.compute\(frame_l\, frame_r\)\.astype\(np\.float32\) \/ 16\.0\n\n        min_disparity \= cv2\.getTrackbarPos\(\&quot;minDisparity\&quot;\, super\(\)\.window_name\)\n        numDisparity \= cv2\.getTrackbarPos\(\&quot;numDisparity\&quot;\, super\(\)\.window_name\)\n\n        disparity \= \(disp \- min_disparity\) \/ numDisparity\n        cv2\.imshow\(super\(\)\.window_name\, disparity\)\n\n        return disp\n\n    def __init__\(self\, w\, h\, focal_length\)\:\n        super\(\)\.__init__\(w\, h\, focal_length\, \&quot;StereoSGBM disparity\&quot;\)\n\n        window_size \= 3\n        min_disp \= 16\n        num_disp \= 112 \- min_disp\n        self\.stereo \= cv2\.StereoSGBM_create\(minDisparity\=min_disp\,\n                                            numDisparities\=num_disp\,\n                                            uniquenessRatio\=10\,\n                                            speckleWindowSize\=100\,\n                                            speckleRange\=32\,\n                                            disp12MaxDiff\=1\,\n                                            P1\=8 \* 3 \* window_size \*\* 2\,\n                                            P2\=32 \* 3 \* window_size \*\* 2\,\n                                            \)\n\n        cv2\.namedWindow\(super\(\)\.window_name\)\n\n        cv2\.createTrackbar\(\&quot;minDisparity\&quot;\, super\(\)\.window_name\, min_disp\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;numDisparities\&quot;\, super\(\)\.window_name\, num_disp\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;uniquenessRatio\&quot;\, super\(\)\.window_name\, 0\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;speckleWindowSize\&quot;\, super\(\)\.window_name\, 0\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;speckleRange\&quot;\, super\(\)\.window_name\, 0\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;disp12MaxDiff\&quot;\, super\(\)\.window_name\, 0\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;window_size\&quot;\, super\(\)\.window_name\, 0\, 20\, self\.__change\)\n\n    def _to_3d\(self\, disp\, color_frame_l\)\:\n        pass\n\n    def __change\(self\, x\)\:\n        min_disparity \= cv2\.getTrackbarPos\(\&quot;minDisparity\&quot;\, super\(\)\.window_name\)\n\n        numDisparity \= cv2\.getTrackbarPos\(\&quot;numDisparity\&quot;\, super\(\)\.window_name\)\n\n        uniquenessRatio \= cv2\.getTrackbarPos\(\&quot;uniquenessRatio\&quot;\, super\(\)\.window_name\)\n\n        speckleWindowSize \= cv2\.getTrackbarPos\(\&quot;speckleWindowSize\&quot;\, super\(\)\.window_name\)\n\n        speckleRange \= cv2\.getTrackbarPos\(\&quot;speckleRange\&quot;\, super\(\)\.window_name\)\n\n        disp12MaxDiff \= cv2\.getTrackbarPos\(\&quot;disp12MaxDiff\&quot;\, super\(\)\.window_name\)\n\n        window_size \= cv2\.getTrackbarPos\(\&quot;window_size\&quot;\, super\(\)\.window_name\)\n\n        self\.stereo \= cv2\.StereoSGBM_create\(minDisparity\=min_disparity\,\n                                            numDisparities\=numDisparity\,\n                                            uniquenessRatio\=uniquenessRatio\,\n                                            speckleWindowSize\=speckleWindowSize\,\n                                            speckleRange\=speckleRange\,\n                                            disp12MaxDiff\=disp12MaxDiff\,\n                                            P1\=8 \* 3 \* window_size \*\* 2\,\n                                            P2\=32 \* 3 \* window_size \*\* 2\)\n</find>
+      <find>super().window_name</find>
+      <find>self.window_name</find>
     </findStrings>
+    <replaceStrings>
+      <replace>super().window_name</replace>
+      <replace>self.window_name</replace>
+      <replace>self.settings_name</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -85,6 +76,7 @@
         <option value="$PROJECT_DIR$/glump_test.py" />
         <option value="$PROJECT_DIR$/Calibration.py" />
         <option value="$PROJECT_DIR$/Testing.py" />
+        <option value="$PROJECT_DIR$/Reconstruct.py" />
       </list>
     </option>
   </component>
@@ -110,7 +102,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -119,15 +110,11 @@
               <item name="CameraVision" type="b2602c69:ProjectViewProjectNode" />
               <item name="CameraVision" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="CameraVision" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CameraVision" type="462c0819:PsiDirectoryNode" />
-              <item name="calibration_save" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -237,20 +224,20 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17771883" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32887402" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39910814" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -259,19 +246,17 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Calibration.py</url>
-          <line>147</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="5" />
+      <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>cv2.getTrackbarPos(&quot;numDisparity&quot;, self.window_name)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>len(right_left_calibrated)</expression-string>
         <language-id>Python</language-id>
@@ -280,13 +265,95 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Testing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="15" column="74" lean-forward="false" selection-start-line="15" selection-start-column="74" selection-end-line="15" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/out.ply">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4672900">
+          <caret line="186916" column="0" lean-forward="false" selection-start-line="186916" selection-start-column="0" selection-end-line="186916" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Reconstruct.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3675">
+          <caret line="150" column="79" lean-forward="false" selection-start-line="150" selection-start-column="79" selection-end-line="150" selection-end-column="79" />
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
+            <element signature="e#1210#1277#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Testing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="14" column="20" lean-forward="false" selection-start-line="14" selection-start-column="20" selection-end-line="14" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/out.ply">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4672900">
+          <caret line="186916" column="0" lean-forward="false" selection-start-line="186916" selection-start-column="0" selection-end-line="186916" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Reconstruct.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2425">
+          <caret line="100" column="54" lean-forward="true" selection-start-line="100" selection-start-column="54" selection-end-line="100" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
+            <element signature="e#1210#1277#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Calibration.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2875">
+          <caret line="115" column="28" lean-forward="false" selection-start-line="115" selection-start-column="28" selection-end-line="115" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/out.ply">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4073475">
+          <caret line="162939" column="0" lean-forward="false" selection-start-line="162939" selection-start-column="0" selection-end-line="162939" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Testing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1750">
+          <caret line="73" column="118" lean-forward="false" selection-start-line="73" selection-start-column="118" selection-end-line="73" selection-end-column="118" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Calibration.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -294,9 +361,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="625">
           <caret line="27" column="23" lean-forward="false" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -304,9 +369,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -314,9 +376,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="625">
           <caret line="27" column="23" lean-forward="true" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -324,9 +384,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -334,9 +391,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
           <caret line="12" column="26" lean-forward="true" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -364,25 +419,18 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/right_left_calibrated.npy" />
-    <entry file="file://$USER_HOME$/.PyCharmCE2017.3/system/python_stubs/1799164001/cv2/cv2/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="10154" column="4" lean-forward="false" selection-start-line="10154" selection-start-column="4" selection-end-line="10154" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2017.3/system/python_stubs/1799164001/nt.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
           <caret line="380" column="4" lean-forward="false" selection-start-line="380" selection-start-column="4" selection-end-line="380" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/glump_test.py">
+    <entry file="file://$PROJECT_DIR$/glump_test.py" />
+    <entry file="file://$PROJECT_DIR$/out.ply">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-550">
-          <caret line="14" column="12" lean-forward="false" selection-start-line="14" selection-start-column="12" selection-end-line="14" selection-end-column="12" />
+        <state relative-caret-position="4672900">
+          <caret line="186916" column="0" lean-forward="false" selection-start-line="186916" selection-start-column="0" selection-end-line="186916" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -395,30 +443,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Calibration.py">
+    <entry file="file://$USER_HOME$/.PyCharmCE2017.3/system/python_stubs/1799164001/cv2/cv2/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-138">
-          <caret line="115" column="28" lean-forward="false" selection-start-line="115" selection-start-column="28" selection-end-line="115" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-486">
+          <caret line="10275" column="28" lean-forward="true" selection-start-line="10275" selection-start-column="28" selection-end-line="10275" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/out.ply">
+    <entry file="file://$PROJECT_DIR$/Calibration.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-150">
-          <caret line="162939" column="0" lean-forward="false" selection-start-line="162939" selection-start-column="0" selection-end-line="162939" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="25">
+          <caret line="147" column="0" lean-forward="false" selection-start-line="147" selection-start-column="0" selection-end-line="147" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Testing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-550">
-          <caret line="61" column="31" lean-forward="true" selection-start-line="61" selection-start-column="31" selection-end-line="61" selection-end-column="31" />
+        <state relative-caret-position="300">
+          <caret line="15" column="74" lean-forward="false" selection-start-line="15" selection-start-column="74" selection-end-line="15" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Reconstruct.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="18" column="27" lean-forward="true" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#30#0" expanded="true" />
+            <element signature="e#1210#1277#0" expanded="false" />
           </folding>
         </state>
       </provider>

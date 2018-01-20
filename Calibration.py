@@ -253,8 +253,8 @@ def undistort_rectify(frameL, frameR):
     frameL, frameR = undistort(frameL, frameR)
 
     frameL = cv2.remap(frameL, rectify_left_map[0], rectify_left_map[1],
-                       cv2.INTER_NEAREST)  # or cv2.INTER_NEAREST default cv2.INTER_LANCZOS4
+                       cv2.INTER_LANCZOS4)  # or cv2.INTER_NEAREST default cv2.INTER_LANCZOS4
     frameR = cv2.remap(frameR, rectify_right_map[0], rectify_right_map[1],
-                       cv2.INTER_NEAREST)  # or cv2.INTER_NEAREST default cv2.INTER_LANCZOS4
+                       cv2.INTER_LANCZOS4)  # or cv2.INTER_NEAREST default cv2.INTER_LANCZOS4
 
     return frameL, frameR
