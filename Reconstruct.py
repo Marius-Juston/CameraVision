@@ -53,10 +53,10 @@ class Stereo:
         pass
 
 
-class StereoBM(Stereo):
+class StereoBM(object, Stereo):
 
     def _to_3d(self, disp, color_frame_l):
-        points = super()._to_3d(disp, color_frame_l)
+        points = super(StereoBM, self)._to_3d(disp, color_frame_l)
         mask = disp > disp.min()
 
         out_points = points[mask]
@@ -65,7 +65,7 @@ class StereoBM(Stereo):
         # TODO
 
     def __init__(self, w, h, focal_length, show_settings=True):
-        super().__init__(h, w, focal_length, "StereoBM disparity", show_settings)
+        super(object, self).__init__(h, w, focal_length, "StereoBM disparity", show_settings)
 
         self.stereo = cv2.StereoBM_create(16, 5)  # best between the options 0,5 or 16,5
 
@@ -98,7 +98,7 @@ class StereoBM(Stereo):
         return disp
 
 
-class StereoSGBM(Stereo):
+class StereoSGBM(object, Stereo):
     def compute(self, frame_l, frame_r):
         disp = self.stereo.compute(frame_l, frame_r).astype(np.float32) / 16.0
 
@@ -111,7 +111,7 @@ class StereoSGBM(Stereo):
         return disp
 
     def __init__(self, w, h, focal_length, show_settings=True):
-        super().__init__(w, h, focal_length, "StereoSGBM disparity", show_settings)
+        super(object, self).__init__(w, h, focal_length, "StereoSGBM disparity", show_settings)
 
         window_size = 3
         min_disp = 16

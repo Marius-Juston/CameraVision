@@ -12,8 +12,8 @@ if __name__ == '__main__':
 
     rect, frameL = cap_left.read()
     h, w = frameL.shape[:2]
-    # stereo_bm = Reconstruct.StereoBM(w, h, .8 * w)
-    stereo_sgbm = Reconstruct.StereoSGBM(w, h, .8 * w, show_settings=False)
+    stereo_bm = Reconstruct.StereoBM(w, h, .8 * w, show_settings=True)
+    stereo_sgbm = Reconstruct.StereoSGBM(w, h, .8 * w, show_settings=True)
 
     while True:
         rect, frameL = cap_left.read()
@@ -24,7 +24,7 @@ if __name__ == '__main__':
         cv2.imshow("L", frameL)
         cv2.imshow("R", frameR)
 
-        # stereo_bm.compute(frameL, frameR)
+        stereo_bm.compute(frameL, frameR)
         stereo_sgbm.compute(frameL, frameR)
 
         key_press = cv2.waitKey(100) & 0xFF
