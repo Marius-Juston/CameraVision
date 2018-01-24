@@ -1,59 +1,62 @@
 import vtk
-from numpy import random
 
 
+# TODO decide if this object should be made private or not
 class VtkPointCloud:
 
     def __init__(self, maxNumPoints=1e6):
-        self.maxNumPoints = maxNumPoints
-        self.vtkPolyData = vtk.vtkPolyData()
+        self.__maxNumPoints = maxNumPoints
+        self.__vtkPolyData = vtk.vtkPolyData()
         self.clearPoints()
         mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputData(self.vtkPolyData)
+        mapper.SetInputData(self.__vtkPolyData)
         mapper.SetColorModeToDefault()
         mapper.SetScalarVisibility(1)
         self.vtkActor = vtk.vtkActor()
         self.vtkActor.SetMapper(mapper)
 
     def addPoint(self, point, color):
-        if self.vtkPoints.GetNumberOfPoints() < self.maxNumPoints:
-            pointId = self.vtkPoints.InsertNextPoint(point[:])
-            self.vtkDepth.InsertNextValue(point[2])
-            self.vtkCells.InsertNextCell(1)
-            self.vtkCells.InsertCellPoint(pointId)
-            self.Colors.InsertNextTuple3(*color[:])
-        else:
-            r = random.randint(0, self.maxNumPoints)
-            self.vtkPoints.SetPoint(r, point[:])
-        self.vtkCells.Modified()
-        self.vtkPoints.Modified()
-        self.vtkDepth.Modified()
-        self.Colors.Modified()
+        if self.__vtkPoints.GetNumberOfPoints() < self.__maxNumPoints:
+            pointId = self.__vtkPoints.InsertNextPoint(point[:])
+            self.__vtkDepth.InsertNextValue(point[2])
+            self.__vtkCells.InsertNextCell(1)
+            self.__vtkCells.InsertCellPoint(pointId)
+            self.__vtkColors.InsertNextTuple3(*color)
+            self.__vtkCells.Modified()
+            self.__vtkPoints.Modified()
+            self.__vtkDepth.Modified()
+            self.__vtkColors.Modified()
 
     def clearPoints(self):
-        self.vtkPoints = vtk.vtkPoints()
-        self.vtkCells = vtk.vtkCellArray()
-        self.vtkDepth = vtk.vtkDoubleArray()
-        self.vtkDepth.SetName('DepthArray')
-        self.Colors = vtk.vtkUnsignedCharArray()
-        self.Colors.SetNumberOfComponents(3)
-        self.Colors.SetName('ColorArray')
+        del self.__vtkPoints
+        del self.__vtkCells
+        del self.__vtkDepth
+        del self.__vtkColors
 
-        self.vtkPolyData.SetPoints(self.vtkPoints)
-        self.vtkPolyData.SetVerts(self.vtkCells)
-        self.vtkPolyData.GetPointData().SetScalars(self.vtkDepth)
-        self.vtkPolyData.GetPointData().SetScalars(self.Colors)
-        self.vtkPolyData.GetPointData().SetActiveScalars('ColorArray')
+        self.__vtkPoints = vtk.vtkPoints()
+        self.__vtkCells = vtk.vtkCellArray()
+        self.__vtkDepth = vtk.vtkDoubleArray()
+        self.__vtkDepth.SetName('DepthArray')
+        self.__vtkColors = vtk.vtkUnsignedCharArray()
+        self.__vtkColors.SetNumberOfComponents(3)
+        self.__vtkColors.SetName('ColorArray')
+
+        self.__vtkPolyData.SetPoints(self.__vtkPoints)
+        self.__vtkPolyData.SetVerts(self.__vtkCells)
+        self.__vtkPolyData.GetPointData().SetScalars(self.__vtkDepth)
+        self.__vtkPolyData.GetPointData().SetScalars(self.__vtkColors)
+        self.__vtkPolyData.GetPointData().SetActiveScalars('ColorArray')
 
 
 # TODO make it so that it is a singleton
 def start_point_cloud():
     pointCloud = VtkPointCloud()
+
     renderer = vtk.vtkRenderer()
 
     # Renderer
     renderer.AddActor(pointCloud.vtkActor)
-    renderer.SetBackground(0, 0, 0)
+    renderer.SetBackground(0, 0, 0)  # color of bacground (I believe the color range is from [0,1])
     renderer.ResetCamera()
     renderWindow = vtk.vtkRenderWindow()
 
