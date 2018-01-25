@@ -16,8 +16,11 @@ if __name__ == '__main__':
     stereo_sgbm = Reconstruct.StereoSGBM(w, h, .8 * w, show_settings=True)
 
     while True:
-        rect, frameL = cap_left.read()
-        rect, frameR = cap_right.read()
+        rect = cap_left.grab()
+        rect = cap_right.grab()
+
+        frameL = cap_left.retrieve()[1]
+        frameR = cap_right.retrieve()[1]
 
         frameL, frameR = Calibration.undistort_rectify(frameL, frameR)
 

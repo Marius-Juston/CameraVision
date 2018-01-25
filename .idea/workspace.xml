@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="daa05c2e-53b7-4151-abad-41e8e4001801" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/PointCloudTesting.py" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/DisparityTesting.py" afterPath="$PROJECT_DIR$/DisparityTesting.py" />
       <change beforePath="$PROJECT_DIR$/PointCloudViewer.py" afterPath="$PROJECT_DIR$/PointCloudViewer.py" />
+      <change beforePath="$PROJECT_DIR$/PoseEstimationTesting.py" afterPath="$PROJECT_DIR$/PoseEstimationTesting.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -14,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="Reconstruct.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Reconstruct.py">
+      <file leaf-file-name="CalibrationTesting.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CalibrationTesting.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="485">
-              <caret line="113" column="20" lean-forward="false" selection-start-line="113" selection-start-column="20" selection-end-line="113" selection-end-column="20" />
+            <state relative-caret-position="275">
+              <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -27,48 +30,28 @@
       <file leaf-file-name="PointCloudViewer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/PointCloudViewer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="106">
-              <caret line="51" column="15" lean-forward="false" selection-start-line="51" selection-start-column="15" selection-end-line="51" selection-end-column="15" />
+            <state relative-caret-position="297">
+              <caret line="66" column="56" lean-forward="true" selection-start-line="66" selection-start-column="56" selection-end-line="66" selection-end-column="56" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DisparityTesting.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DisparityTesting.py">
+      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/requirements.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="7" column="33" lean-forward="false" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
+            <state relative-caret-position="50">
+              <caret line="2" column="8" lean-forward="false" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="8" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PoseEstimator.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/PoseEstimator.py">
+      <file leaf-file-name="PointCloudTesting.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/PointCloudTesting.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Calibration.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Calibration.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="485">
-              <caret line="103" column="17" lean-forward="false" selection-start-line="103" selection-start-column="17" selection-end-line="103" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CalibrationTesting.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CalibrationTesting.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="325">
-              <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+            <state relative-caret-position="550">
+              <caret line="22" column="20" lean-forward="false" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -93,11 +76,14 @@
       <find>\nclass StereoBM\(Stereo\)\:\n\n    def _to_3d\(self\, disp\, color_frame_l\)\:\n        points \= super\(\)\._to_3d\(disp\, color_frame_l\)\n        mask \= disp \&gt; disp\.min\(\)\n\n        out_points \= points\[mask\]\n        out_colors \= color_frame_l\[mask\]\n\n    def __init__\(self\, w\, h\, focal_length\)\:\n        super\(\)\.__init__\(h\, w\, focal_length\, \&quot;StereoBM disparity\&quot;\)\n\n        self\.stereo \= cv2\.StereoBM_create\(16\, 5\)  \# best between the options 0\,5 or 16\,5\n\n        cv2\.namedWindow\(super\(\)\.window_name\)\n        cv2\.createTrackbar\(\&quot;numDisparities\&quot;\, super\(\)\.window_name\, 1\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;blockSize\&quot;\, super\(\)\.window_name\, 5\, 255\, self\.__change\)\n        cv2\.setTrackbarMin\(\&quot;blockSize\&quot;\, super\(\)\.window_name\, 5\)\n\n    def __change\(self\, x\)\:\n        print\(x\)\n\n        block_size \= cv2\.getTrackbarPos\(\&quot;blockSize\&quot;\, super\(\)\.window_name\)\n        if block_size \% 2 \=\= 0\:\n            block_size \+\= 1\n            cv2\.setTrackbarPos\(\&quot;blockSize\&quot;\, super\(\)\.window_name\, block_size\)\n\n        num_disparities \= cv2\.getTrackbarPos\(\&quot;numDisparities\&quot;\, super\(\)\.window_name\) \* 16\n\n        self\.stereo \= cv2\.StereoBM_create\(num_disparities\, block_size\)\n\n    def compute\(self\, frame_l\, frame_r\)\:\n        frame_l \= cv2\.cvtColor\(frame_l\, cv2\.COLOR_BGR2GRAY\)\n        frame_r \= cv2\.cvtColor\(frame_r\, cv2\.COLOR_BGR2GRAY\)\n\n        disp \= self\.stereo\.compute\(frame_l\, frame_r\)\n\n        norm_coeff \= 255 \/ disp\.max\(\)\n        cv2\.imshow\(super\(\)\.window_name\, disp \* norm_coeff \/ 255\)\n\n        return disp\n\n\nclass StereoSGBM\(Stereo\)\:\n    def compute\(self\, frame_l\, frame_r\)\:\n        disp \= self\.stereo\.compute\(frame_l\, frame_r\)\.astype\(np\.float32\) \/ 16\.0\n\n        min_disparity \= cv2\.getTrackbarPos\(\&quot;minDisparity\&quot;\, super\(\)\.window_name\)\n        numDisparity \= cv2\.getTrackbarPos\(\&quot;numDisparity\&quot;\, super\(\)\.window_name\)\n\n        disparity \= \(disp \- min_disparity\) \/ numDisparity\n        cv2\.imshow\(super\(\)\.window_name\, disparity\)\n\n        return disp\n\n    def __init__\(self\, w\, h\, focal_length\)\:\n        super\(\)\.__init__\(w\, h\, focal_length\, \&quot;StereoSGBM disparity\&quot;\)\n\n        window_size \= 3\n        min_disp \= 16\n        num_disp \= 112 \- min_disp\n        self\.stereo \= cv2\.StereoSGBM_create\(minDisparity\=min_disp\,\n                                            numDisparities\=num_disp\,\n                                            uniquenessRatio\=10\,\n                                            speckleWindowSize\=100\,\n                                            speckleRange\=32\,\n                                            disp12MaxDiff\=1\,\n                                            P1\=8 \* 3 \* window_size \*\* 2\,\n                                            P2\=32 \* 3 \* window_size \*\* 2\,\n                                            \)\n\n        cv2\.namedWindow\(super\(\)\.window_name\)\n\n        cv2\.createTrackbar\(\&quot;minDisparity\&quot;\, super\(\)\.window_name\, min_disp\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;numDisparities\&quot;\, super\(\)\.window_name\, num_disp\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;uniquenessRatio\&quot;\, super\(\)\.window_name\, 0\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;speckleWindowSize\&quot;\, super\(\)\.window_name\, 0\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;speckleRange\&quot;\, super\(\)\.window_name\, 0\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;disp12MaxDiff\&quot;\, super\(\)\.window_name\, 0\, 20\, self\.__change\)\n        cv2\.createTrackbar\(\&quot;window_size\&quot;\, super\(\)\.window_name\, 0\, 20\, self\.__change\)\n\n    def _to_3d\(self\, disp\, color_frame_l\)\:\n        pass\n\n    def __change\(self\, x\)\:\n        min_disparity \= cv2\.getTrackbarPos\(\&quot;minDisparity\&quot;\, super\(\)\.window_name\)\n\n        numDisparity \= cv2\.getTrackbarPos\(\&quot;numDisparity\&quot;\, super\(\)\.window_name\)\n\n        uniquenessRatio \= cv2\.getTrackbarPos\(\&quot;uniquenessRatio\&quot;\, super\(\)\.window_name\)\n\n        speckleWindowSize \= cv2\.getTrackbarPos\(\&quot;speckleWindowSize\&quot;\, super\(\)\.window_name\)\n\n        speckleRange \= cv2\.getTrackbarPos\(\&quot;speckleRange\&quot;\, super\(\)\.window_name\)\n\n        disp12MaxDiff \= cv2\.getTrackbarPos\(\&quot;disp12MaxDiff\&quot;\, super\(\)\.window_name\)\n\n        window_size \= cv2\.getTrackbarPos\(\&quot;window_size\&quot;\, super\(\)\.window_name\)\n\n        self\.stereo \= cv2\.StereoSGBM_create\(minDisparity\=min_disparity\,\n                                            numDisparities\=numDisparity\,\n                                            uniquenessRatio\=uniquenessRatio\,\n                                            speckleWindowSize\=speckleWindowSize\,\n                                            speckleRange\=speckleRange\,\n                                            disp12MaxDiff\=disp12MaxDiff\,\n                                            P1\=8 \* 3 \* window_size \*\* 2\,\n                                            P2\=32 \* 3 \* window_size \*\* 2\)\n</find>
       <find>super().window_name</find>
       <find>self.window_name</find>
+      <find>\d{2}</find>
+      <find>+\d{1,2}</find>
     </findStrings>
     <replaceStrings>
       <replace>super().window_name</replace>
       <replace>self.window_name</replace>
       <replace>self.settings_name</replace>
+      <replace />
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -110,11 +96,12 @@
         <option value="$PROJECT_DIR$/Calibration.py" />
         <option value="$PROJECT_DIR$/PoseEstimator.py" />
         <option value="$PROJECT_DIR$/Reconstruct.py" />
-        <option value="$PROJECT_DIR$/Testing.py" />
-        <option value="$PROJECT_DIR$/DisparityTesting.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="$PROJECT_DIR$/PoseEstimationTesting.py" />
         <option value="$PROJECT_DIR$/CalibrationTesting.py" />
+        <option value="$PROJECT_DIR$/DisparityTesting.py" />
+        <option value="$PROJECT_DIR$/PoseEstimationTesting.py" />
+        <option value="$PROJECT_DIR$/PointCloudTesting.py" />
+        <option value="$PROJECT_DIR$/Testing.py" />
         <option value="$PROJECT_DIR$/PointCloudViewer.py" />
       </list>
     </option>
@@ -142,7 +129,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -154,6 +140,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -172,7 +159,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.DisparityTesting">
+  <component name="RunManager" selected="Python.Testing (2)">
     <configuration name="DisparityTesting" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -186,6 +173,24 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="CameraVision" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DisparityTesting.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="PointCloudTesting" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CameraVision" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/PointCloudTesting.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -227,7 +232,7 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="Testing" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="Testing (2)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -239,44 +244,26 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="CameraVision" />
-      <option name="SCRIPT_NAME" value="C:\Users\mariu\Documents\GitHub\CameraVision\CalibrationTesting.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="glump_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CameraVision" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/glump_test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Testing.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.Testing" />
-      <item index="1" class="java.lang.String" itemvalue="Python.glump_test" />
-      <item index="2" class="java.lang.String" itemvalue="Python.PoseEstimationTesting" />
-      <item index="3" class="java.lang.String" itemvalue="Python.Testing (1)" />
-      <item index="4" class="java.lang.String" itemvalue="Python.DisparityTesting" />
+      <item index="0" class="java.lang.String" itemvalue="Python.PoseEstimationTesting" />
+      <item index="1" class="java.lang.String" itemvalue="Python.Testing (1)" />
+      <item index="2" class="java.lang.String" itemvalue="Python.DisparityTesting" />
+      <item index="3" class="java.lang.String" itemvalue="Python.PointCloudTesting" />
+      <item index="4" class="java.lang.String" itemvalue="Python.Testing (2)" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.DisparityTesting" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Testing (1)" />
-        <item index="2" class="java.lang.String" itemvalue="Python.PoseEstimationTesting" />
-        <item index="3" class="java.lang.String" itemvalue="Python.Testing" />
-        <item index="4" class="java.lang.String" itemvalue="Python.glump_test" />
+        <item index="0" class="java.lang.String" itemvalue="Python.Testing (2)" />
+        <item index="1" class="java.lang.String" itemvalue="Python.PointCloudTesting" />
+        <item index="2" class="java.lang.String" itemvalue="Python.DisparityTesting" />
+        <item index="3" class="java.lang.String" itemvalue="Python.Testing (1)" />
+        <item index="4" class="java.lang.String" itemvalue="Python.PoseEstimationTesting" />
       </list>
     </recent_temporary>
   </component>
@@ -299,18 +286,19 @@
   <component name="TodoView" selected-index="3" />
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="1942" height="1102" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17771883" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17771883" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17725752" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32887402" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39910814" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39910814" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -325,7 +313,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="7" />
+      <option name="time" value="8" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -344,14 +332,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CalibrationTesting.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="12" column="26" lean-forward="true" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/right_left_undistorted.npz" />
     <entry file="file://$PROJECT_DIR$/right_left_undistorted.npz" />
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/numpy/lib/npyio.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -367,13 +347,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="308" column="0" lean-forward="false" selection-start-line="308" selection-start-column="0" selection-end-line="308" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/codecs.py" />
     <entry file="file://$PROJECT_DIR$/right_left_calibrated.npy" />
     <entry file="file://$USER_HOME$/.PyCharmCE2017.3/system/python_stubs/1799164001/nt.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -531,13 +505,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="308" column="0" lean-forward="false" selection-start-line="308" selection-start-column="0" selection-end-line="308" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/codecs.py" />
     <entry file="file://$PROJECT_DIR$/right_left_calibrated.npy" />
     <entry file="file://$USER_HOME$/.PyCharmCE2017.3/system/python_stubs/1799164001/nt.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -555,17 +523,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TriangleColoredPoints.vtp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="13" column="34" lean-forward="false" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/TriangleColoredPoints.vtp" />
     <entry file="file://$PROJECT_DIR$/Reconstruct.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="485">
+        <state relative-caret-position="2825">
           <caret line="113" column="20" lean-forward="false" selection-start-line="113" selection-start-column="20" selection-end-line="113" selection-end-column="20" />
           <folding />
         </state>
@@ -581,48 +542,64 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Calibration.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="485">
+        <state relative-caret-position="2475">
           <caret line="103" column="17" lean-forward="false" selection-start-line="103" selection-start-column="17" selection-end-line="103" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DisparityTesting.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="7" column="33" lean-forward="false" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="31" lean-forward="true" selection-start-line="0" selection-start-column="31" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PoseEstimationTesting.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="6" column="7" lean-forward="true" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CalibrationTesting.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
+        <state relative-caret-position="275">
           <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PoseEstimationTesting.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="706">
+          <caret line="82" column="0" lean-forward="false" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DisparityTesting.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="331">
+          <caret line="24" column="34" lean-forward="false" selection-start-line="24" selection-start-column="34" selection-end-line="24" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="8" lean-forward="false" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PointCloudTesting.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="22" column="20" lean-forward="false" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Testing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="13" column="36" lean-forward="false" selection-start-line="13" selection-start-column="36" selection-end-line="13" selection-end-column="36" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/PointCloudViewer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="106">
-          <caret line="51" column="15" lean-forward="false" selection-start-line="51" selection-start-column="15" selection-end-line="51" selection-end-column="15" />
+        <state relative-caret-position="297">
+          <caret line="66" column="56" lean-forward="true" selection-start-line="66" selection-start-column="56" selection-end-line="66" selection-end-column="56" />
           <folding />
         </state>
       </provider>
