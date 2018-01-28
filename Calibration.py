@@ -1,3 +1,4 @@
+# coding=utf-8
 import os
 import shutil
 
@@ -5,10 +6,16 @@ import cv2
 import numpy as np
 
 
-def merge_captures(frameL, frameR):
+def merge_captures(frame_l, frame_r):
+    """
+
+    :param frame_l:
+    :param frame_r:
+    :return:
+    """
     merged = []
 
-    for rowL, rowR in zip(frameL, frameR):
+    for rowL, rowR in zip(frame_l, frame_r):
         row = []
 
         row.extend(rowL)
@@ -19,113 +26,162 @@ def merge_captures(frameL, frameR):
     return np.array(merged)
 
 
-def cheeseboard_capture(cameraL, cameraR, number_columns=7, number_rows=7):
+def cheeseboard_capture(camera_l, camera_r, number_columns=7, number_rows=7):
+    """
+
+    :param camera_l:
+    :param camera_r:
+    :param number_columns:
+    :param number_rows:
+    :return:
+    """
     # termination criteria
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
     # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
-    objpL = np.zeros((number_rows * number_columns, 3), np.float32)
-    objpL[:, :2] = np.mgrid[0:number_rows, 0:number_columns].T.reshape(-1, 2)
+    objp_l = np.zeros((number_rows * number_columns, 3), np.float32)
+    objp_l[:, :2] = np.mgrid[0:number_rows, 0:number_columns].T.reshape(-1, 2)
 
-    objpR = np.zeros((number_rows * number_columns, 3), np.float32)
-    objpR[:, :2] = np.mgrid[0:number_rows, 0:number_columns].T.reshape(-1, 2)
+    objp_r = np.zeros((number_rows * number_columns, 3), np.float32)
+    objp_r[:, :2] = np.mgrid[0:number_rows, 0:number_columns].T.reshape(-1, 2)
 
     # Arrays to store object points and image points from all the images.
-    objpointsL = []  # 3d point in real world space
-    objpointsR = []  # 3d point in real world space
+    objpoints_l = []  # 3d point in real world space
+    objpoints_r = []  # 3d point in real world space
 
-    imgpointsL = []  # 2d points in image plane.
-    imgpointsR = []  # 2d points in image plane.
+    imgpoints_l = []  # 2d points in image plane.
+    imgpoints_r = []  # 2d points in image plane.
 
     i = 0
 
     while True:
-        rectL, imgL = cameraL.read()
-        grayL = cv2.cvtColor(imgL, cv2.COLOR_BGR2GRAY)
+        rect_l, img_l = camera_l.read()
+        gray_l = cv2.cvtColor(img_l, cv2.COLOR_BGR2GRAY)
 
-        rectR, imgR = cameraR.read()
-        grayR = cv2.cvtColor(imgR, cv2.COLOR_BGR2GRAY)
+        rect_r, img_r = camera_r.read()
+        gray_r = cv2.cvtColor(img_r, cv2.COLOR_BGR2GRAY)
 
         # Find the chess board corners
-        retL, cornersL = cv2.findChessboardCorners(grayL, (number_rows, number_columns), None)
-        retR, cornersR = cv2.findChessboardCorners(grayR, (number_rows, number_columns), None)
+        ret_l, corners_l = cv2.findChessboardCorners(gray_l, (number_rows, number_columns))
+        ret_r, corners_r = cv2.findChessboardCorners(gray_r, (number_rows, number_columns))
 
         key_pressed = (cv2.waitKey(1) & 0xFF)
 
         if key_pressed == ord('q'):
-            shapeL = grayL.shape[::-1]
-            shapeR = grayR.shape[::-1]
+            shape_l = gray_l.shape[::-1]
+            shape_r = gray_r.shape[::-1]
             break
 
         # If found, add object points, image points (after refining them)
-        if retL and retR:
-            corners2L = cv2.cornerSubPix(grayL, cornersL, (11, 11), (-1, -1), criteria)
-            corners2R = cv2.cornerSubPix(grayR, cornersR, (11, 11), (-1, -1), criteria)
+        if ret_l and ret_r:
+            corners2_l = cv2.cornerSubPix(gray_l, corners_l, (11, 11), (-1, -1), criteria)
+            corners2_r = cv2.cornerSubPix(gray_r, corners_r, (11, 11), (-1, -1), criteria)
 
             # Draw and display the corners
-            imgL = cv2.drawChessboardCorners(imgL, (7, 7), corners2L, retL)
-            imgR = cv2.drawChessboardCorners(imgR, (7, 7), corners2R, retR)
+            img_l = cv2.drawChessboardCorners(img_l, (7, 7), corners2_l, ret_l)
+            img_r = cv2.drawChessboardCorners(img_r, (7, 7), corners2_r, ret_r)
 
             if key_pressed == ord('c'):
-                objpointsL.append(objpL)
-                objpointsR.append(objpR)
+                objpoints_l.append(objp_l)
+                objpoints_r.append(objp_r)
 
-                imgpointsL.append(corners2L)
-                imgpointsR.append(corners2R)
+                imgpoints_l.append(corners2_l)
+                imgpoints_r.append(corners2_r)
                 i += 1
                 print(i)
 
-        cv2.imshow('imgL', imgL)
-        cv2.imshow('imgR', imgR)
+        cv2.imshow('imgL', img_l)
+        cv2.imshow('imgR', img_r)
 
-    return objpointsL, imgpointsL, shapeL, objpointsR, imgpointsR, shapeR
-
-
-def calibrate_camera(objpointsL, imgpointsL, shapeL, objpointsR, imgpointsR, shapeR):
-    calibrated_cameraL = cv2.calibrateCamera(objpointsL, imgpointsL, shapeL, None, None)
-    calibrated_cameraR = cv2.calibrateCamera(objpointsR, imgpointsR, shapeR, None, None)
-
-    retL, mtxL, distL, rvecsL, tvecsL = calibrated_cameraL
-    retR, mtxR, distR, rvecsR, tvecsR = calibrated_cameraR
-
-    return [retL], mtxL, distL, rvecsL, tvecsL, [retR], mtxR, distR, rvecsR, tvecsR
+    return objpoints_l, imgpoints_l, shape_l, objpoints_r, imgpoints_r, shape_r
 
 
-def new_camera_matrix(shapeL, mtxL, distL, shapeR, mtxR, distR):
-    hL, wL = shapeL
-    newcameramtxL, roiL = cv2.getOptimalNewCameraMatrix(mtxL, distL, (wL, hL), 1, (wL, hL))
+def calibrate_camera(objpoints_l, imgpoints_l, shape_l, objpoints_r, imgpoints_r, shape_r):
+    """
 
-    hR, wR = shapeR
-    newcameramtxR, roiR = cv2.getOptimalNewCameraMatrix(mtxR, distR, (wR, hR), 1, (wL, hL))
+    :param objpoints_l:
+    :param imgpoints_l:
+    :param shape_l:
+    :param objpoints_r:
+    :param imgpoints_r:
+    :param shape_r:
+    :return:
+    """
+    calibrated_camera_l = cv2.calibrateCamera(objpoints_l, imgpoints_l, shape_l, None, None)
+    calibrated_camera_r = cv2.calibrateCamera(objpoints_r, imgpoints_r, shape_r, None, None)
 
-    return newcameramtxL, roiL, newcameramtxR, roiR
+    ret_l, mtx_l, dist_l, rvecs_l, tvecs_l = calibrated_camera_l
+    ret_r, mtx_r, dist_r, rvecs_r, tvecs_r = calibrated_camera_r
+
+    return [ret_l], mtx_l, dist_l, rvecs_l, tvecs_l, [ret_r], mtx_r, dist_r, rvecs_r, tvecs_r
 
 
-def undistort_frames(frameL, mtxL, distL, newcameramtxL, roiL, frameR, mtxR, distR, newcameramtxR, roiR):
+def new_camera_matrix(shape_l, mtx_l, dist_l, shape_r, mtx_r, dist_r):
+    """
+
+    :param shape_l:
+    :param mtx_l:
+    :param dist_l:
+    :param shape_r:
+    :param mtx_r:
+    :param dist_r:
+    :return:
+    """
+    h_l, w_l = shape_l
+    new_camera_mtx_l, roi_l = cv2.getOptimalNewCameraMatrix(mtx_l, dist_l, (w_l, h_l), 1, (w_l, h_l))
+
+    h_r, w_r = shape_r
+    new_camera_mtx_r, roi_r = cv2.getOptimalNewCameraMatrix(mtx_r, dist_r, (w_r, h_r), 1, (w_l, h_l))
+
+    return new_camera_mtx_l, roi_l, new_camera_mtx_r, roi_r
+
+
+def undistort_frames(frame_l, mtx_l, dist_l, new_camera_mtx_l, roi_l, frame_r, mtx_r, dist_r, new_camera_mtx_r, roi_r):
+    """
+
+    :param frame_l:
+    :param mtx_l:
+    :param dist_l:
+    :param new_camera_mtx_l:
+    :param roi_l:
+    :param frame_r:
+    :param mtx_r:
+    :param dist_r:
+    :param new_camera_mtx_r:
+    :param roi_r:
+    :return:
+    """
     # undistort
-    hL, wL = frameL.shape[:2]
-    mapx, mapy = cv2.initUndistortRectifyMap(mtxL, distL, None, newcameramtxL, (wL, hL), 5)
-    dstL = cv2.remap(frameL, mapx, mapy, cv2.INTER_LINEAR)
+    h_l, w_l = frame_l.shape[:2]
+    mapx, mapy = cv2.initUndistortRectifyMap(mtx_l, dist_l, None, new_camera_mtx_l, (w_l, h_l), 5)
+    dst_l = cv2.remap(frame_l, mapx, mapy, cv2.INTER_LINEAR)
 
-    hR, wR = frameR.shape[:2]
-    mapx, mapy = cv2.initUndistortRectifyMap(mtxR, distR, None, newcameramtxR, (wR, hR), 5)
-    dstR = cv2.remap(frameR, mapx, mapy, cv2.INTER_LINEAR)
+    h_r, w_r = frame_r.shape[:2]
+    mapx, mapy = cv2.initUndistortRectifyMap(mtx_r, dist_r, None, new_camera_mtx_r, (w_r, h_r), 5)
+    dst_r = cv2.remap(frame_r, mapx, mapy, cv2.INTER_LINEAR)
 
     # # crop the image TODO make it so that it crops the same length
-    x, y, w, h = roiL
-    dstL = dstL[y:y + h, x:x + w]
+    x, y, w, h = roi_l
+    dst_l = dst_l[y:y + h, x:x + w]
 
-    x, y, w, h = roiR
-    dstR = dstR[y:y + h, x:x + w]
+    x, y, w, h = roi_r
+    dst_r = dst_r[y:y + h, x:x + w]
 
-    return dstL, dstR
+    return dst_l, dst_r
 
 
-def calibrate(cap_left, cap_right, clean_previous=False):
-    while not cap_right.isOpened() and cap_left.isOpened():
+def calibrate(cap_left, cap_right, clean_previous=False, close_cameras=False):
+    """
+
+    :param cap_left:
+    :param cap_right:
+    :param clean_previous:
+    :param close_cameras:
+    """
+    while not cap_right.isOpened() and not cap_left.isOpened():
         pass
 
-    calibration_folder = "./calibration_save/"
+    calibration_folder = "../calibration_save/"
 
     undistorted_file_name = calibration_folder + "right_left_undistorted.npy"
     calibrated_file_name = calibration_folder + "right_left_calibrated.npy"
@@ -145,26 +201,26 @@ def calibrate(cap_left, cap_right, clean_previous=False):
     else:
         right_left_undistorted = np.load(undistorted_file_name)
 
-    objL, imgL, shapeL, objR, imgR, shapeR = right_left_undistorted
+    obj_l, img_l, shape_l, obj_r, img_r, shape_r = right_left_undistorted
 
     if not os.path.exists(calibrated_file_name):
-        right_left_calibrated = calibrate_camera(objL, imgL, shapeL, objR, imgR, shapeR)
+        right_left_calibrated = calibrate_camera(obj_l, img_l, shape_l, obj_r, img_r, shape_r)
 
         np.save(calibrated_file_name, right_left_calibrated)
     else:
         right_left_calibrated = np.load(calibrated_file_name)
 
-    retL, mtxL, distL, rvecsL, tvecsL, retR, mtxR, distR, rvecsR, tvecsR = right_left_calibrated
-    retL = retL[0]
-    retR = retR[0]
+    ret_l, mtx_l, dist_l, rvecs_l, tvecs_l, ret_r, mtx_r, dist_r, rvecs_r, tvecs_r = right_left_calibrated
+    ret_l = ret_l[0]
+    ret_r = ret_r[0]
 
     if not os.path.exists(new_camera_matrix_file_name):
-        right_left_new_camera_matrix = new_camera_matrix(shapeL, mtxL, distL, shapeR, mtxR, distR)
+        right_left_new_camera_matrix = new_camera_matrix(shape_l, mtx_l, dist_l, shape_r, mtx_r, dist_r)
         np.save(new_camera_matrix_file_name, right_left_new_camera_matrix)
     else:
         right_left_new_camera_matrix = np.load(new_camera_matrix_file_name)
 
-    newcameramtxL, roiL, newcameramtxR, roiR = right_left_new_camera_matrix
+    new_camera_mtx_l, roi_l, new_camera_mtx_r, roi_r = right_left_new_camera_matrix
 
     ############################################################################################
 
@@ -172,61 +228,65 @@ def calibrate(cap_left, cap_right, clean_previous=False):
     stereocalib_flags = cv2.CALIB_FIX_ASPECT_RATIO | cv2.CALIB_ZERO_TANGENT_DIST | cv2.CALIB_SAME_FOCAL_LENGTH | cv2.CALIB_RATIONAL_MODEL | cv2.CALIB_FIX_K3 | cv2.CALIB_FIX_K4 | cv2.CALIB_FIX_K5
 
     if not os.path.exists(stereo_calibration_file_name):
-        stereo_calibration = cv2.stereoCalibrate(objL,
-                                                 imgL,
-                                                 imgR,
-                                                 newcameramtxL,
-                                                 distL,
-                                                 newcameramtxR,
-                                                 distR,
+        stereo_calibration = cv2.stereoCalibrate(obj_l,
+                                                 img_l,
+                                                 img_r,
+                                                 new_camera_mtx_l,
+                                                 dist_l,
+                                                 new_camera_mtx_r,
+                                                 dist_r,
                                                  (640, 480),
                                                  criteria=stereocalib_criteria,
                                                  flags=stereocalib_flags)
 
-        retval, newcameramtxL, distL, newcameramtxR, distR, R, T, E, F = stereo_calibration
+        retval, new_camera_mtx_l, dist_l, new_camera_mtx_r, dist_r, r, t, e, f = stereo_calibration
         retval = [retval]
 
-        stereo_calibration = [retval, newcameramtxL, distL, newcameramtxR, distR, R, T, E, F]
+        stereo_calibration = [retval, new_camera_mtx_l, dist_l, new_camera_mtx_r, dist_r, r, t, e, f]
 
         np.save(stereo_calibration_file_name, stereo_calibration)
     else:
         stereo_calibration = np.load(stereo_calibration_file_name)
 
-    retval, newcameramtxL, distL, newcameramtxR, distR, R, T, E, F = stereo_calibration
+    retval, new_camera_mtx_l, dist_l, new_camera_mtx_r, dist_r, r, t, e, f = stereo_calibration
     retval = retval[0]
 
     rectify_scale = 0  # 0=full crop, 1=no crop
 
     if not os.path.exists(stereo_rectification_file_name):
-        stereo_rectification = cv2.stereoRectify(newcameramtxL, distL, newcameramtxR, distR,
-                                                 (640, 480), R, T, alpha=rectify_scale)
+        stereo_rectification = cv2.stereoRectify(new_camera_mtx_l, dist_l, new_camera_mtx_r, dist_r,
+                                                 (640, 480), r, t, alpha=rectify_scale)
 
         np.save(stereo_rectification_file_name, stereo_rectification)
     else:
         stereo_rectification = np.load(stereo_rectification_file_name)
 
-    R1, R2, P1, P2, Q, roi1, roi2 = stereo_rectification
+    r1, r2, p1, p2, q, roi1, roi2 = stereo_rectification
 
-    left_maps = cv2.initUndistortRectifyMap(newcameramtxL, distL, R1, P1, (640, 480), cv2.CV_32FC1)
-    right_maps = cv2.initUndistortRectifyMap(newcameramtxR, distR, R2, P2, (640, 480), cv2.CV_32FC1)
+    left_maps = cv2.initUndistortRectifyMap(new_camera_mtx_l, dist_l, r1, p1, (640, 480), cv2.CV_32FC1)
+    right_maps = cv2.initUndistortRectifyMap(new_camera_mtx_r, dist_r, r2, p2, (640, 480), cv2.CV_32FC1)
+
+    cv2.destroyAllWindows()
+
+    if close_cameras:
+        cap_left.release()
+        cap_right.release()
 
     #############################################################################
 
     global mtx_L, dist_L, newcameramtx_L, roi_L, mtx_R, dist_R, newcameramtx_R, roi_R, rectify_left_map, rectify_right_map
-    mtx_L = mtxL
-    dist_L = distL
-    newcameramtx_L = newcameramtxL
-    roi_L = roiL
+    mtx_L = mtx_l
+    dist_L = dist_l
+    newcameramtx_L = new_camera_mtx_l
+    roi_L = roi_l
 
-    mtx_R = mtxR
-    dist_R = distR
-    newcameramtx_R = newcameramtxR
-    roi_R = roiR
+    mtx_R = mtx_r
+    dist_R = dist_r
+    newcameramtx_R = new_camera_mtx_r
+    roi_R = roi_r
 
     rectify_left_map = left_maps
     rectify_right_map = right_maps
-
-    cv2.destroyAllWindows()
 
 
 rectify_left_map = None
@@ -235,26 +295,41 @@ mtx_L = None
 dist_L = None
 newcameramtx_L = None
 roi_L = None
-frame_R = None
 mtx_R = None
 dist_R = None
 newcameramtx_R = None
 roi_R = None
 
 
-def undistort(frameL, frameR):
-    frameL, frameR = undistort_frames(frameL, mtx_L, dist_L, newcameramtx_L, roi_L, frameR, mtx_R, dist_R,
-                                      newcameramtx_R, roi_R)
+def undistort(frame_l, frame_r):
+    """
 
-    return frameL, frameR
+    :param frame_l:
+    :param frame_r:
+    :return:
+    """
+    frame_l, frame_r = undistort_frames(frame_l, mtx_L, dist_L, newcameramtx_L, roi_L, frame_r, mtx_R, dist_R,
+                                        newcameramtx_R, roi_R)
+
+    return frame_l, frame_r
 
 
-def undistort_rectify(frameL, frameR):
-    frameL, frameR = undistort(frameL, frameR)
+def undistort_rectify(frame_l, frame_r):
+    """
 
-    frameL = cv2.remap(frameL, rectify_left_map[0], rectify_left_map[1],
-                       cv2.INTER_LANCZOS4)  # or cv2.INTER_NEAREST default cv2.INTER_LANCZOS4
-    frameR = cv2.remap(frameR, rectify_right_map[0], rectify_right_map[1],
-                       cv2.INTER_LANCZOS4)  # or cv2.INTER_NEAREST default cv2.INTER_LANCZOS4
+    :param frame_l:
+    :param frame_r:
+    :return:
+    """
+    frame_l, frame_r = undistort(frame_l, frame_r)
 
-    return frameL, frameR
+    frame_l = cv2.remap(frame_l, rectify_left_map[0], rectify_left_map[1],
+                        cv2.INTER_LANCZOS4)  # or cv2.INTER_NEAREST default cv2.INTER_LANCZOS4
+    frame_r = cv2.remap(frame_r, rectify_right_map[0], rectify_right_map[1],
+                        cv2.INTER_LANCZOS4)  # or cv2.INTER_NEAREST default cv2.INTER_LANCZOS4
+
+    return frame_l, frame_r
+
+
+if __name__ == '__main__':
+    calibrate(cv2.VideoCapture(1), cv2.VideoCapture(2), clean_previous=False, close_cameras=True)

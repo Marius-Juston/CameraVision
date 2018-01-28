@@ -1,3 +1,4 @@
+# coding=utf-8
 from abc import abstractmethod
 
 import cv2
@@ -17,6 +18,12 @@ end_header
 
 
 def write_ply(fn, verts, colors):
+    """
+
+    :param fn:
+    :param verts:
+    :param colors:
+    """
     verts = verts.reshape(-1, 3)
     colors = colors.reshape(-1, 3)
     verts = np.hstack([verts, colors])
@@ -26,7 +33,13 @@ def write_ply(fn, verts, colors):
 
 
 class Stereo:
-    def __init__(self, w, h, focal_length, window_name="window", show_settings=True):
+    """
+
+    """
+
+    def __init__(self, w, h, focal_length, use_saved_settings, window_name="window", show_settings=False,
+                 show_disparity=True):
+        self.show_disparity = show_disparity
         self.window_name = window_name
         self.Q = np.float32([[1, 0, 0, -0.5 * w],
                              [0, -1, 0, 0.5 * h],  # turn points 180 deg around x-axis,
@@ -40,9 +53,22 @@ class Stereo:
             cv2.namedWindow(self.settings_name)
 
     @abstractmethod
-    def _to_3d(self, disp, color_frame_l):
+    def to_3d(self, disp, color_frame_l):
+        """
+
+        :param disp:
+        :param color_frame_l:
+        :return:
+        """
         points = cv2.reprojectImageTo3D(disp, self.Q)
-        return points
+        # points[::, 2] *= -1
+
+        mask = disp > disp.min()
+
+        out_points = points[mask]
+        out_colors = color_frame_l[mask]
+
+        return out_points, out_colors
 
     @abstractmethod
     def __change(self, x):
@@ -50,24 +76,31 @@ class Stereo:
 
     @abstractmethod
     def compute(self, frame_l, frame_r):
+        """
+
+        :param frame_l:
+        :param frame_r:
+        """
         pass
 
 
 class StereoBM(object, Stereo):
+    """
 
-    def _to_3d(self, disp, color_frame_l):
-        points = super(StereoBM, self)._to_3d(disp, color_frame_l)
-        mask = disp > disp.min()
+    """
 
-        out_points = points[mask]
-        out_colors = color_frame_l[mask]
+    def to_3d(self, disp, color_frame_l):
+        """
 
-        # TODO
+        :param disp:
+        :param color_frame_l:
+        """
+        super(StereoBM, self).to_3d(disp, color_frame_l)
 
-    def __init__(self, w, h, focal_length, show_settings=True):
-        super(object, self).__init__(h, w, focal_length, "StereoBM disparity", show_settings)
+    def __init__(self, w, h, focal_length, show_settings=True, show_disparity=False, num_disparities=16, block_size=5):
+        super(object, self).__init__(h, w, focal_length, "StereoBM disparity", show_settings, show_disparity)
 
-        self.stereo = cv2.StereoBM_create(16, 5)  # best between the options 0,5 or 16,5
+        self.stereo = cv2.StereoBM_create(num_disparities, block_size)  # best between the options 0,5 or 16,5
 
         if show_settings:
             cv2.createTrackbar("numDisparities", self.settings_name, 1, 20, self.__change)
@@ -87,50 +120,73 @@ class StereoBM(object, Stereo):
         self.stereo.setBlockSize(block_size)
 
     def compute(self, frame_l, frame_r):
+        """
+
+        :param frame_l:
+        :param frame_r:
+        :return:
+        """
         frame_l = cv2.cvtColor(frame_l, cv2.COLOR_BGR2GRAY)
         frame_r = cv2.cvtColor(frame_r, cv2.COLOR_BGR2GRAY)
 
         disp = self.stereo.compute(frame_l, frame_r)
 
-        norm_coeff = 255 / disp.max()
-        cv2.imshow(self.window_name, disp * norm_coeff / 255)
+        if self.show_disparity:
+            norm_coeff = 255 / disp.max()
+            cv2.imshow(self.window_name, disp * norm_coeff / 255)
 
         return disp
 
 
 class StereoSGBM(object, Stereo):
+    """
+
+    """
+
     def compute(self, frame_l, frame_r):
+        """
+
+        :param frame_l:
+        :param frame_r:
+        :return:
+        """
         disp = self.stereo.compute(frame_l, frame_r).astype(np.float32) / 16.0
 
-        min_disparity = self.stereo.getMinDisparity()
-        numDisparity = self.stereo.getNumDisparities()
+        if self.show_disparity:
+            min_disparity = self.stereo.getMinDisparity()
+            num_disparity = self.stereo.getNumDisparities()
 
-        disparity = (disp - min_disparity) / numDisparity
-        cv2.imshow(self.window_name, disparity)
-
+            disparity = (disp - min_disparity) / num_disparity
+            cv2.imshow(self.window_name, disparity)
         return disp
 
-    def __init__(self, w, h, focal_length, show_settings=True):
-        super(object, self).__init__(w, h, focal_length, "StereoSGBM disparity", show_settings)
+    def __init__(self, w, h, focal_length, show_settings=True, show_disparity=False,
+                 default_window_size=3,
+                 default_min_disp=16,
+                 default_uniqueness_ratio=10,
+                 default_speckle_window_size=100,
+                 default_speckle_range=32,
+                 default_disp12_max_diff=1):
 
-        window_size = 3
-        min_disp = 16
-        num_disp = 112 - min_disp
-        self.stereo = cv2.StereoSGBM_create(minDisparity=min_disp,
-                                            numDisparities=num_disp,
-                                            uniquenessRatio=10,
-                                            speckleWindowSize=100,
-                                            speckleRange=32,
-                                            disp12MaxDiff=1,
-                                            P1=8 * 3 * window_size ** 2,
-                                            P2=32 * 3 * window_size ** 2,
+        super(object, self).__init__(w, h, focal_length, "StereoSGBM disparity", show_settings, show_disparity)
+
+        default_num_disp = 112 - default_min_disp
+
+        self.stereo = cv2.StereoSGBM_create(minDisparity=default_min_disp,
+                                            numDisparities=default_num_disp,
+                                            uniquenessRatio=default_uniqueness_ratio,
+                                            speckleWindowSize=default_speckle_window_size,
+                                            speckleRange=default_speckle_range,
+                                            disp12MaxDiff=default_disp12_max_diff,
+                                            P1=8 * 3 * default_window_size ** 2,
+                                            P2=32 * 3 * default_window_size ** 2,
                                             )
 
         if show_settings:
-            cv2.createTrackbar("minDisparity", self.settings_name, int(min_disp / 16), 30, self.__change)
+            cv2.createTrackbar("minDisparity", self.settings_name, int(default_min_disp / 16), 30, self.__change)
             cv2.setTrackbarMin("minDisparity", self.settings_name, 1)
 
-            cv2.createTrackbar("numDisparities", self.settings_name, int(num_disp / 16), 30, self.__change)
+            cv2.createTrackbar("numDisparities", self.settings_name, int(default_num_disp / 16), 30, self.__change)
             cv2.setTrackbarMin("numDisparities", self.settings_name, 1)
             cv2.createTrackbar("uniquenessRatio", self.settings_name, 10, 40, self.__change)
             cv2.setTrackbarMin("uniquenessRatio", self.settings_name, 1)
@@ -139,25 +195,31 @@ class StereoSGBM(object, Stereo):
             cv2.createTrackbar("speckleRange", self.settings_name, 32, 100, self.__change)
             cv2.createTrackbar("disp12MaxDiff", self.settings_name, 1, 20, self.__change)
             #
-            cv2.createTrackbar("window_size", self.settings_name, window_size, 10, self.__change)
+            cv2.createTrackbar("window_size", self.settings_name, default_window_size, 10, self.__change)
 
-    def _to_3d(self, disp, color_frame_l):
-        pass  # TODO
+    def to_3d(self, disp, color_frame_l):
+        """
+
+        :param disp:
+        :param color_frame_l:
+        :return:
+        """
+        return super(object, self).to_3d(disp, color_frame_l)
 
     def __change(self, x):
         min_disparity = cv2.getTrackbarPos("minDisparity", self.settings_name) * 16
-        numDisparity = cv2.getTrackbarPos("numDisparities", self.settings_name) * 16
-        uniquenessRatio = cv2.getTrackbarPos("uniquenessRatio", self.settings_name)
-        speckleWindowSize = cv2.getTrackbarPos("speckleWindowSize", self.settings_name)
-        speckleRange = cv2.getTrackbarPos("speckleRange", self.settings_name)
-        disp12MaxDiff = cv2.getTrackbarPos("disp12MaxDiff", self.settings_name)
+        num_disparity = cv2.getTrackbarPos("numDisparities", self.settings_name) * 16
+        uniqueness_ratio = cv2.getTrackbarPos("uniquenessRatio", self.settings_name)
+        speckle_window_size = cv2.getTrackbarPos("speckleWindowSize", self.settings_name)
+        speckle_range = cv2.getTrackbarPos("speckleRange", self.settings_name)
+        disp12_max_diff = cv2.getTrackbarPos("disp12MaxDiff", self.settings_name)
         window_size = cv2.getTrackbarPos("window_size", self.settings_name)
 
         self.stereo.setMinDisparity(min_disparity)
-        self.stereo.setNumDisparities(numDisparity)
-        self.stereo.setUniquenessRatio(uniquenessRatio)
-        self.stereo.setSpeckleWindowSize(speckleWindowSize)
-        self.stereo.setSpeckleRange(speckleRange)
-        self.stereo.setDisp12MaxDiff(disp12MaxDiff)
+        self.stereo.setNumDisparities(num_disparity)
+        self.stereo.setUniquenessRatio(uniqueness_ratio)
+        self.stereo.setSpeckleWindowSize(speckle_window_size)
+        self.stereo.setSpeckleRange(speckle_range)
+        self.stereo.setDisp12MaxDiff(disp12_max_diff)
         self.stereo.setP1(8 * 3 * window_size ** 2)
         self.stereo.setP2(32 * 3 * window_size ** 2)

@@ -1,10 +1,18 @@
+# coding=utf-8
 import numpy as np
 
 from PointCloudViewer import start_point_cloud
 
 
-def get_random_3(min, max):
-    return [np.random.randint(min, max), np.random.randint(min, max), np.random.randint(min, max)]
+def get_random_3(min_value, max_value):
+    """
+
+    :param min_value: 
+    :param max_value: 
+    :return: 
+    """
+    return [np.random.randint(min_value, max_value), np.random.randint(min_value, max_value),
+            np.random.randint(min_value, max_value)]
 
 
 if __name__ == '__main__':
@@ -20,4 +28,5 @@ if __name__ == '__main__':
         renderWindow.Render()
 
     renderWindowInteractor.Start()
+    point_cloud.close()
 # Library to use MayAvi NThought
