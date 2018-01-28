@@ -1,4 +1,5 @@
 # coding=utf-8
+import math
 from abc import abstractmethod
 
 import cv2
@@ -37,7 +38,7 @@ class Stereo:
 
     """
 
-    def __init__(self, w, h, focal_length, use_saved_settings, window_name="window", show_settings=False,
+    def __init__(self, w, h, focal_length, window_name="window", show_settings=False,
                  show_disparity=True):
         self.show_disparity = show_disparity
         self.window_name = window_name
@@ -46,7 +47,8 @@ class Stereo:
                              [0, 0, 0, -focal_length],  # so that y-axis looks up
                              [0, 0, 1, 0]])
 
-        cv2.namedWindow(self.window_name)
+        if show_disparity:
+            cv2.namedWindow(self.window_name)
 
         if show_settings:
             self.settings_name = window_name + " Settings"
@@ -94,8 +96,9 @@ class StereoBM(object, Stereo):
 
         :param disp:
         :param color_frame_l:
+        :return:
         """
-        super(StereoBM, self).to_3d(disp, color_frame_l)
+        return super(StereoBM, self).to_3d(disp, color_frame_l)
 
     def __init__(self, w, h, focal_length, show_settings=True, show_disparity=False, num_disparities=16, block_size=5):
         super(object, self).__init__(h, w, focal_length, "StereoBM disparity", show_settings, show_disparity)
@@ -103,18 +106,22 @@ class StereoBM(object, Stereo):
         self.stereo = cv2.StereoBM_create(num_disparities, block_size)  # best between the options 0,5 or 16,5
 
         if show_settings:
-            cv2.createTrackbar("numDisparities", self.settings_name, 1, 20, self.__change)
+            cv2.createTrackbar("numDisparities", self.settings_name, int(num_disparities / 16), 20, self.__change)
             cv2.setTrackbarMin("numDisparities", self.settings_name, 1)
-            cv2.createTrackbar("blockSize", self.settings_name, 5, 255, self.__change)
+            cv2.setTrackbarMax("numDisparities", self.settings_name, int(math.floor(min(w, h) / 16)))
+
+            cv2.createTrackbar("blockSize", self.settings_name, block_size, 255, self.__change)
             cv2.setTrackbarMin("blockSize", self.settings_name, 5)
 
     def __change(self, x):
-        block_size = cv2.getTrackbarPos("blockSize", self.window_name)
+        block_size = cv2.getTrackbarPos("blockSize", self.settings_name)
         if block_size % 2 == 0:
             block_size += 1
-            cv2.setTrackbarPos("blockSize", self.window_name, block_size)
+            cv2.setTrackbarPos("blockSize", self.settings_name, block_size)
 
         num_disparities = max(cv2.getTrackbarPos("numDisparities", self.settings_name) * 16, 16)
+
+        print(block_size)
 
         self.stereo.setNumDisparities(num_disparities)
         self.stereo.setBlockSize(block_size)

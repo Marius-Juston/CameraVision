@@ -16,8 +16,8 @@ if __name__ == '__main__':
 
     rect, frameL = cap_left.read()
     h, w = frameL.shape[:2]
-    # stereo_bm = Reconstruct.StereoBM(w, h, .8 * w, show_settings=True)
-    stereo_sgbm = Reconstruct.StereoSGBM(w, h, .8 * w, show_settings=True, show_disparity=True)
+    stereo = Reconstruct.StereoBM(w, h, .8 * w, show_settings=True, show_disparity=True)
+    # stereo = Reconstruct.StereoSGBM(w, h, .8 * w, show_settings=True, show_disparity=True)
 
     while True:
         rect = cap_left.grab()
@@ -31,10 +31,9 @@ if __name__ == '__main__':
         cv2.imshow("L", frameL)
         cv2.imshow("R", frameR)
 
-        # stereo_bm.compute(frameL, frameR)
-        disp = stereo_sgbm.compute(frameL, frameR)
+        disp = stereo.compute(frameL, frameR)
 
-        points, colors = stereo_sgbm.to_3d(disp, frameL)
+        points, colors = stereo.to_3d(disp, frameL)
         pointCloud.clear_points()
         pointCloud.add_points(points, colors)
 
