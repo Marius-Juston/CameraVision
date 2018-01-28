@@ -170,14 +170,13 @@ class StereoSGBM(object, Stereo):
     def __init__(self, w, h, focal_length, show_settings=True, show_disparity=False,
                  default_window_size=3,
                  default_min_disp=16,
+                 default_num_disp=16,
                  default_uniqueness_ratio=10,
                  default_speckle_window_size=100,
                  default_speckle_range=32,
                  default_disp12_max_diff=1):
 
         super(object, self).__init__(w, h, focal_length, "StereoSGBM disparity", show_settings, show_disparity)
-
-        default_num_disp = 112 - default_min_disp
 
         self.stereo = cv2.StereoSGBM_create(minDisparity=default_min_disp,
                                             numDisparities=default_num_disp,
@@ -197,11 +196,11 @@ class StereoSGBM(object, Stereo):
             cv2.setTrackbarMin("numDisparities", self.settings_name, 1)
             cv2.createTrackbar("uniquenessRatio", self.settings_name, 10, 40, self.__change)
             cv2.setTrackbarMin("uniquenessRatio", self.settings_name, 1)
-            #
+
             cv2.createTrackbar("speckleWindowSize", self.settings_name, 100, 200, self.__change)
             cv2.createTrackbar("speckleRange", self.settings_name, 32, 100, self.__change)
             cv2.createTrackbar("disp12MaxDiff", self.settings_name, 1, 20, self.__change)
-            #
+
             cv2.createTrackbar("window_size", self.settings_name, default_window_size, 10, self.__change)
 
     def to_3d(self, disp, color_frame_l):

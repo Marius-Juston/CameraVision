@@ -16,8 +16,8 @@ if __name__ == '__main__':
 
     rect, frameL = cap_left.read()
     h, w = frameL.shape[:2]
-    stereo = Reconstruct.StereoBM(w, h, .8 * w, show_settings=True, show_disparity=True)
-    # stereo = Reconstruct.StereoSGBM(w, h, .8 * w, show_settings=True, show_disparity=True)
+    # stereo = Reconstruct.StereoBM(w, h, .8 * w, show_settings=True, show_disparity=True)
+    stereo = Reconstruct.StereoSGBM(w, h, .8 * w, show_settings=True, show_disparity=True)
 
     while True:
         rect = cap_left.grab()
