@@ -1,7 +1,7 @@
 # coding=utf-8
 import numpy as np
 
-from PointCloudViewer import start_point_cloud
+from PointCloudViewer import VtkPointCloud
 
 
 def get_random_3(min_value, max_value):
@@ -16,17 +16,13 @@ def get_random_3(min_value, max_value):
 
 
 if __name__ == '__main__':
-    point_cloud, renderWindow, renderWindowInteractor = start_point_cloud()
+    with VtkPointCloud() as point_cloud:
+        for i in range(1000):
+            # print(i)
+            values = get_random_3(-10, 10), get_random_3(0, 255)
 
-    for i in range(1000):
-        # print(i)
-        values = get_random_3(-10, 10), get_random_3(0, 255)
+            print(values)
 
-        print(values)
+            point_cloud.add_point(*values)
 
-        point_cloud.add_point(*values)
-        renderWindow.Render()
-
-    renderWindowInteractor.Start()
-    point_cloud.close()
 # Library to use MayAvi NThought
