@@ -1,6 +1,8 @@
 # coding=utf-8
 import vtk
 
+from EventHandler import InteractorEventHandler
+
 
 # TODO decide if this object should be made private or not
 class VtkPointCloud(object):
@@ -28,6 +30,7 @@ class VtkPointCloud(object):
         mapper.SetScalarRange(min_value, max_value)
         self.vtkActor = vtk.vtkActor()
         self.vtkActor.GetProperty().SetPointSize(5)
+
         # self.vtkActor.DragableOn()
 
         self.vtkActor.SetMapper(mapper)
@@ -45,61 +48,18 @@ class VtkPointCloud(object):
         self.render_window.AddRenderer(self.renderer)
         self.render_window_interactor = vtk.vtkRenderWindowInteractor()
 
-        self.__setup_keyboard_input(self.render_window_interactor)
+        self.input_handler = InteractorEventHandler(self.renderer, self.render_window_interactor, self.render,
+                                                    pitch_increment, yaw_increment, roll_increment, zoom_increment,
+                                                    x_axis_increment, y_axis_increment, z_axis_increment)
 
         # Interactor
-        self.render_window_interactor.SetInteractorStyle(self.camera_event_handler)
+        self.render_window_interactor.SetInteractorStyle(self.input_handler)
         self.render_window_interactor.SetRenderWindow(self.render_window)
 
         if full_screen:
             self.render_window.FullScreenOn()
 
         self.render_window.Render()
-
-    def __setup_keyboard_input(self, render_window_interactor):
-        self.camera_event_handler = vtk.vtkInteractorStyleTrackballCamera()
-
-        def KeyPress(obj, event):
-            camera = self.renderer.GetActiveCamera()
-            pitch, yaw, roll = camera.GetOrientation()
-            key = render_window_interactor.GetKeySym()
-
-            x, y, z = camera.GetPosition()
-
-            # f_x, f_y, f_z = camera.GetFocalPoint()
-
-            if key == "Up":
-                camera.Pitch(-self.pitch_increment)
-
-            elif key == "Down":
-                camera.Pitch(self.pitch_increment)
-
-            elif key == "Right":
-                camera.Yaw(self.yaw_increment)
-
-            elif key == "Left":
-                camera.Yaw(-self.yaw_increment)
-
-            elif key == "minus":
-                camera.Zoom(1 / self.zoom_increment)
-
-            elif key == "equal":
-                camera.Zoom(self.zoom_increment)
-
-            elif "w":
-                # TODO make W make the camera go forwards depending on the orientation of the camera always trying to go the focal point
-                pass
-                #                  x y  z
-                # camera.SetPosition(0,self.y_axis_increment, 1)
-            elif "space":
-                self.reset_camera()
-
-            self.render()
-
-            print(key, (x, y, z), (pitch, yaw, roll))
-            return
-
-        self.camera_event_handler.AddObserver("KeyPressEvent", KeyPress)
 
     def add_point(self, point, color, render=True):
         """

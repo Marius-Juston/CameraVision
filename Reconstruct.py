@@ -98,7 +98,7 @@ class StereoBM(object, Stereo):
         :param color_frame_l:
         :return:
         """
-        return super(StereoBM, self).to_3d(disp, color_frame_l)
+        return super(object, self).to_3d(disp, color_frame_l)
 
     def __init__(self, w, h, focal_length, show_settings=True, show_disparity=False, num_disparities=16, block_size=5):
         super(object, self).__init__(h, w, focal_length, "StereoBM disparity", show_settings, show_disparity)
@@ -139,7 +139,7 @@ class StereoBM(object, Stereo):
         disp = self.stereo.compute(frame_l, frame_r)
 
         if self.show_disparity:
-            norm_coeff = 255 / disp.max()
+            norm_coeff = 255 / disp.max()  # TODO make this work it is not showing anything
             cv2.imshow(self.window_name, disp * norm_coeff / 255)
 
         return disp
