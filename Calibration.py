@@ -1,6 +1,7 @@
 # coding=utf-8
 import os
 import shutil
+from datetime import datetime
 
 import cv2
 import numpy as np
@@ -170,7 +171,16 @@ def undistort_frames(frame_l, mtx_l, dist_l, new_camera_mtx_l, roi_l, frame_r, m
     return dst_l, dst_r
 
 
-def calibrate(cap_left, cap_right, clean_previous=False, close_cameras=False):
+def set_camera_settings(camera):
+    camera.set(cv2.CAP_PROP_ISO_SPEED, 1000)
+    camera.set(cv2.CAP_PROP_FRAME_COUNT, 32)
+    camera.set(cv2.CAP_PROP_AUTO_EXPOSURE, False)
+    camera.set(cv2.CAP_PROP_AUTOFOCUS, False)
+    camera.set(cv2.CAP_PROP_BRIGHTNESS, 100)
+    pass
+
+
+def calibrate(cap_left, cap_right, clean_previous=False, close_cameras=False, number_columns=7, number_rows=7):
     """
 
     :param cap_left:
@@ -178,10 +188,16 @@ def calibrate(cap_left, cap_right, clean_previous=False, close_cameras=False):
     :param clean_previous:
     :param close_cameras:
     """
-    while not cap_right.isOpened() and not cap_left.isOpened():
-        pass
+    now = datetime.now().now()
+    timeout = 10  # seconds
+    while not cap_right.isOpened() or not cap_left.isOpened():
+        if (datetime.now() - now).seconds >= timeout:
+            raise Exception("Cameras not connect")
 
-    calibration_folder = "../calibration_save/"
+    set_camera_settings(cap_left)
+    set_camera_settings(cap_right)
+
+    calibration_folder = "./calibration_save/"
 
     undistorted_file_name = calibration_folder + "right_left_undistorted.npy"
     calibrated_file_name = calibration_folder + "right_left_calibrated.npy"
@@ -196,7 +212,8 @@ def calibrate(cap_left, cap_right, clean_previous=False, close_cameras=False):
         os.makedirs(calibration_folder)
 
     if not os.path.exists(undistorted_file_name):
-        right_left_undistorted = cheeseboard_capture(cap_left, cap_right)
+        right_left_undistorted = cheeseboard_capture(cap_left, cap_right, number_rows=number_rows,
+                                                     number_columns=number_columns)
         np.save(undistorted_file_name, right_left_undistorted)
     else:
         right_left_undistorted = np.load(undistorted_file_name)

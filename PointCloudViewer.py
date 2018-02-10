@@ -11,15 +11,7 @@ class VtkPointCloud(object):
     """
 
     def __init__(self, min_value=-10, max_value=10, max_num_points=1e6, window_background_color=(1, 1, 1),
-                 full_screen=False, pitch_increment=.5, yaw_increment=.5, roll_increment=.5, zoom_increment=1.01,
-                 x_axis_increment=.5, y_axis_increment=.5, z_axis_increment=.5):
-        self.y_axis_increment = y_axis_increment
-        self.x_axis_increment = x_axis_increment
-        self.z_axis_increment = z_axis_increment
-        self.zoom_increment = zoom_increment
-        self.roll_increment = roll_increment
-        self.yaw_increment = yaw_increment
-        self.pitch_increment = pitch_increment
+                 full_screen=False):
         self.__maxNumPoints = max_num_points
         self.__vtkPolyData = vtk.vtkPolyData()
         self.clear_points()
@@ -48,9 +40,7 @@ class VtkPointCloud(object):
         self.render_window.AddRenderer(self.renderer)
         self.render_window_interactor = vtk.vtkRenderWindowInteractor()
 
-        self.input_handler = InteractorEventHandler(self.renderer, self.render_window_interactor, self.render,
-                                                    pitch_increment, yaw_increment, roll_increment, zoom_increment,
-                                                    x_axis_increment, y_axis_increment, z_axis_increment)
+        self.input_handler = InteractorEventHandler(self.renderer, self.render_window_interactor, self.render)
 
         # Interactor
         self.render_window_interactor.SetInteractorStyle(self.input_handler)
@@ -90,6 +80,7 @@ class VtkPointCloud(object):
             self.add_point(point, color, False)
 
         self.render()
+        self.renderer.ResetCameraClippingRange()
 
     def render(self):
         self.render_window.Render()

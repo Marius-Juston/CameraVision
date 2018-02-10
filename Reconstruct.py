@@ -33,7 +33,7 @@ def write_ply(fn, verts, colors):
         np.savetxt(f, verts, fmt='%f %f %f %d %d %d ')
 
 
-class Stereo:
+class Stereo(object):
     """
 
     """
@@ -54,10 +54,10 @@ class Stereo:
             self.settings_name = window_name + " Settings"
             cv2.namedWindow(self.settings_name)
 
-    @abstractmethod
-    def to_3d(self, disp, color_frame_l):
+    def to_3d(self, disp, color_frame_l, distance_threshold=10, invalid=0):
         """
 
+        :param distance_threshold:
         :param disp:
         :param color_frame_l:
         :return:
@@ -67,8 +67,50 @@ class Stereo:
 
         mask = disp > disp.min()
 
-        out_points = points[mask]
-        out_colors = color_frame_l[mask]
+        # print(points.shape)
+        x = points[:, :, 0]  # TODO just get the x depth
+        y = points[:, :, 1]
+        z = points[:, :, 2]
+
+        x[np.isnan(x)] = invalid
+        y[np.isnan(y)] = invalid
+        z[np.isnan(z)] = invalid
+
+        x[np.isinf(x)] = invalid
+        y[np.isinf(y)] = invalid
+        z[np.isinf(z)] = invalid
+        #
+        # x_infinit = np.isinf(x)
+        # y_infinit = np.isinf(x)
+        # z_infinit = np.isinf(x)
+        #
+        #
+        #
+        # points_mask = np.logical_or(x_mask, y_mask, z_mask)
+        # points_mask = np.logical_or(x_infinit, y_infinit, points_mask)
+        # points_mask = np.logical_or(points_mask, z_infinit)
+        #
+        # x[points_mask] = -16
+        # y[points_mask] = -16
+        # z[points_mask] = -16
+        # # print(x.shape)
+        # # print(y.shape)
+        # # print(z.shape)
+
+        # print('x', x.max(), x.min())
+        # print('y', y.max(), y.min())
+        # print('z', z.max(), z.min())
+        distance = np.sqrt(x ** 2 + y ** 2 + z ** 2)
+
+        # print(mask)
+        distance_mask = distance > distance_threshold
+
+        # print(distance_mask)
+
+        full_mask = np.logical_or(mask, distance_mask)
+
+        out_points = points[full_mask]
+        out_colors = color_frame_l[full_mask]
 
         return out_points, out_colors
 
@@ -86,23 +128,13 @@ class Stereo:
         pass
 
 
-class StereoBM(object, Stereo):
+class StereoBM(Stereo):
     """
 
     """
-
-    def to_3d(self, disp, color_frame_l):
-        """
-
-        :param disp:
-        :param color_frame_l:
-        :return:
-        """
-        return super(object, self).to_3d(disp, color_frame_l)
 
     def __init__(self, w, h, focal_length, show_settings=True, show_disparity=False, num_disparities=16, block_size=5):
-        super(object, self).__init__(h, w, focal_length, "StereoBM disparity", show_settings, show_disparity)
-
+        super(StereoBM, self).__init__(h, w, focal_length, "StereoBM disparity", show_settings, show_disparity)
         self.stereo = cv2.StereoBM_create(num_disparities, block_size)  # best between the options 0,5 or 16,5
 
         if show_settings:
@@ -121,7 +153,7 @@ class StereoBM(object, Stereo):
 
         num_disparities = max(cv2.getTrackbarPos("numDisparities", self.settings_name) * 16, 16)
 
-        print(block_size)
+        # print(block_size)
 
         self.stereo.setNumDisparities(num_disparities)
         self.stereo.setBlockSize(block_size)
@@ -136,16 +168,28 @@ class StereoBM(object, Stereo):
         frame_l = cv2.cvtColor(frame_l, cv2.COLOR_BGR2GRAY)
         frame_r = cv2.cvtColor(frame_r, cv2.COLOR_BGR2GRAY)
 
+        # cv2.imshow("left", frame_l)
+        # cv2.imshow("right", frame_r)
+
         disp = self.stereo.compute(frame_l, frame_r)
+        # print(np.histogram(disp, 10))
 
         if self.show_disparity:
-            norm_coeff = 255 / disp.max()  # TODO make this work it is not showing anything
-            cv2.imshow(self.window_name, disp * norm_coeff / 255)
+            disparity_visual = np.zeros(frame_l.shape, dtype=np.uint8)
+
+            cv2.normalize(disp, disparity_visual, 0, 255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+            disparity_visual = np.array(disparity_visual)
+
+            # print(disparity_visual)
+
+            # norm_coeff = 255 / disp.max()  # TODO make this work it is not showing anything
+            # cv2.imshow(self.window_name, disp * norm_coeff / 255 )
+            cv2.imshow(self.window_name, disparity_visual)
 
         return disp
 
 
-class StereoSGBM(object, Stereo):
+class StereoSGBM(Stereo):
     """
 
     """
@@ -176,7 +220,7 @@ class StereoSGBM(object, Stereo):
                  default_speckle_range=32,
                  default_disp12_max_diff=1):
 
-        super(object, self).__init__(w, h, focal_length, "StereoSGBM disparity", show_settings, show_disparity)
+        super(StereoSGBM, self).__init__(w, h, focal_length, "StereoSGBM disparity", show_settings, show_disparity)
 
         self.stereo = cv2.StereoSGBM_create(minDisparity=default_min_disp,
                                             numDisparities=default_num_disp,
@@ -202,15 +246,6 @@ class StereoSGBM(object, Stereo):
             cv2.createTrackbar("disp12MaxDiff", self.settings_name, 1, 20, self.__change)
 
             cv2.createTrackbar("window_size", self.settings_name, default_window_size, 10, self.__change)
-
-    def to_3d(self, disp, color_frame_l):
-        """
-
-        :param disp:
-        :param color_frame_l:
-        :return:
-        """
-        return super(object, self).to_3d(disp, color_frame_l)
 
     def __change(self, x):
         min_disparity = cv2.getTrackbarPos("minDisparity", self.settings_name) * 16
