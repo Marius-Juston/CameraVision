@@ -14,8 +14,8 @@ if __name__ == '__main__':
 
     rect, frameL = cap_left.read()
     h, w = frameL.shape[:2]
-    # stereo = Reconstruct.StereoBM(w, h, .8 * w, show_settings=True, show_disparity=True)
-    stereo = Reconstruct.StereoSGBM(w, h, .8 * w, show_settings=True, show_disparity=True)
+    stereo = Reconstruct.StereoBM(w, h, .8 * w, show_settings=True, show_disparity=True)
+    # stereo = Reconstruct.StereoSGBM(w, h, .8 * w, show_settings=True, show_disparity=True)
 
     get = True
     p = True
@@ -31,9 +31,8 @@ if __name__ == '__main__':
 
                 frameL, frameR = Calibration.undistort_rectify(frameL, frameR)
 
-                # cv2.imshow("L", frameL)
-                # cv2.imshow("R", frameR)
-                #
+                cv2.imshow("L", frameL)
+                cv2.imshow("R", frameR)
 
             if p:
                 disp = stereo.compute(frameL, frameR)

@@ -26,6 +26,7 @@ if __name__ == '__main__':
     with VtkPointCloud() as point_cloud:
 
         left, right, height, width = separate_images("aloeL.jpg", "aloeR.jpg")
+        # left, right, height, width = separate_images("place1.jpg", "place2.jpg")
         # left, right, height, width = separate_images("stereo image.jpg")
         print(height, width)
 
@@ -34,7 +35,7 @@ if __name__ == '__main__':
         # while True:
         disp = stereo.compute(left, right)
 
-        # cv2.imshow("Show", left)
+        cv2.imshow("Show", left)
 
         points, colors = stereo.to_3d(disp, left)
         point_cloud.clear_points()

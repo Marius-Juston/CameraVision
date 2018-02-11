@@ -47,6 +47,8 @@ class Stereo(object):
                              [0, 0, 0, -focal_length],  # so that y-axis looks up
                              [0, 0, 1, 0]])
 
+        self.filter = cv2.ximgproc_DisparityWLSFilter()
+
         if show_disparity:
             cv2.namedWindow(self.window_name)
 
@@ -174,6 +176,8 @@ class StereoBM(Stereo):
         disp = self.stereo.compute(frame_l, frame_r)
         # print(np.histogram(disp, 10))
 
+        self.filter.filter(disp, frame_l)
+
         if self.show_disparity:
             disparity_visual = np.zeros(frame_l.shape, dtype=np.uint8)
 
@@ -184,6 +188,8 @@ class StereoBM(Stereo):
 
             # norm_coeff = 255 / disp.max()  # TODO make this work it is not showing anything
             # cv2.imshow(self.window_name, disp * norm_coeff / 255 )
+
+            cv2.resize(disparity_visual, (720, 480), disparity_visual)
             cv2.imshow(self.window_name, disparity_visual)
 
         return disp
@@ -202,12 +208,12 @@ class StereoSGBM(Stereo):
         :return:
         """
         disp = self.stereo.compute(frame_l, frame_r).astype(np.float32) / 16.0
+        min_disparity = self.stereo.getMinDisparity()
+        num_disparity = self.stereo.getNumDisparities()
+        disparity = (disp - min_disparity) / num_disparity
 
         if self.show_disparity:
-            min_disparity = self.stereo.getMinDisparity()
-            num_disparity = self.stereo.getNumDisparities()
-
-            disparity = (disp - min_disparity) / num_disparity
+            cv2.resize(disparity, (720, 480), disparity)
             cv2.imshow(self.window_name, disparity)
         return disp
 

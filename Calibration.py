@@ -172,12 +172,10 @@ def undistort_frames(frame_l, mtx_l, dist_l, new_camera_mtx_l, roi_l, frame_r, m
 
 
 def set_camera_settings(camera):
-    camera.set(cv2.CAP_PROP_ISO_SPEED, 1000)
-    camera.set(cv2.CAP_PROP_FRAME_COUNT, 32)
-    camera.set(cv2.CAP_PROP_AUTO_EXPOSURE, False)
-    camera.set(cv2.CAP_PROP_AUTOFOCUS, False)
-    camera.set(cv2.CAP_PROP_BRIGHTNESS, 100)
-    pass
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 720.0)
+    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480.0)
+    print(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    print(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
 
 
 def calibrate(cap_left, cap_right, clean_previous=False, close_cameras=False, number_columns=7, number_rows=7):
@@ -244,6 +242,10 @@ def calibrate(cap_left, cap_right, clean_previous=False, close_cameras=False, nu
     stereocalib_criteria = (cv2.TERM_CRITERIA_MAX_ITER + cv2.TERM_CRITERIA_EPS, 100, 1e-5)
     stereocalib_flags = cv2.CALIB_FIX_ASPECT_RATIO | cv2.CALIB_ZERO_TANGENT_DIST | cv2.CALIB_SAME_FOCAL_LENGTH | cv2.CALIB_RATIONAL_MODEL | cv2.CALIB_FIX_K3 | cv2.CALIB_FIX_K4 | cv2.CALIB_FIX_K5
 
+    # size = cap_right
+    camera_width = cap_left.get(cv2.CAP_PROP_FRAME_WIDTH)
+    camera_height = cap_left.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    
     if not os.path.exists(stereo_calibration_file_name):
         stereo_calibration = cv2.stereoCalibrate(obj_l,
                                                  img_l,
@@ -252,7 +254,7 @@ def calibrate(cap_left, cap_right, clean_previous=False, close_cameras=False, nu
                                                  dist_l,
                                                  new_camera_mtx_r,
                                                  dist_r,
-                                                 (640, 480),
+                                                 (camera_width, camera_height),
                                                  criteria=stereocalib_criteria,
                                                  flags=stereocalib_flags)
 
@@ -272,7 +274,7 @@ def calibrate(cap_left, cap_right, clean_previous=False, close_cameras=False, nu
 
     if not os.path.exists(stereo_rectification_file_name):
         stereo_rectification = cv2.stereoRectify(new_camera_mtx_l, dist_l, new_camera_mtx_r, dist_r,
-                                                 (640, 480), r, t, alpha=rectify_scale)
+                                                 (camera_width, camera_height), r, t, alpha=rectify_scale)
 
         np.save(stereo_rectification_file_name, stereo_rectification)
     else:
@@ -280,8 +282,10 @@ def calibrate(cap_left, cap_right, clean_previous=False, close_cameras=False, nu
 
     r1, r2, p1, p2, q, roi1, roi2 = stereo_rectification
 
-    left_maps = cv2.initUndistortRectifyMap(new_camera_mtx_l, dist_l, r1, p1, (640, 480), cv2.CV_32FC1)
-    right_maps = cv2.initUndistortRectifyMap(new_camera_mtx_r, dist_r, r2, p2, (640, 480), cv2.CV_32FC1)
+    left_maps = cv2.initUndistortRectifyMap(new_camera_mtx_l, dist_l, r1, p1, (camera_width, camera_height),
+                                            cv2.CV_32FC1)
+    right_maps = cv2.initUndistortRectifyMap(new_camera_mtx_r, dist_r, r2, p2, (camera_width, camera_height),
+                                             cv2.CV_32FC1)
 
     cv2.destroyAllWindows()
 
